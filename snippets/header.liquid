@@ -1,0 +1,118 @@
+{% if settings.header-promo and settings.header-promo-text != blank %}
+  <div class="header-promo-wrapper">
+    <div class="header-promo">
+      <p class="header-promo-text">{{ settings.header-promo-text }}</p>
+    </div>
+  </div>
+{% endif %}
+
+<div class="main-header-wrapper">
+  <header class="main-header clearfix" role="banner">
+
+    <form class="header-search-form" action="/search" method="get">
+      <input class="header-search-input" name="q" type="text" placeholder="{{ 'general.search.submit' | t }}" />
+    </form>
+
+    <div class="branding">
+      {% if settings.use-logo %}
+        <a class="logo {% if settings.use-retina-logo %}has-retina{% endif %}" href="/">
+          <img class="logo-regular" alt="{{ shop.name | escape }}" src="{{ 'logo.png' | asset_url }}">
+          {% if settings.use-retina-logo %}
+            <img class="logo-retina" alt="{{ shop.name | escape }}" src="{{ 'logo-retina.png' | asset_url }}">
+          {% endif %}
+        </a>
+      {% else %}
+        {% if template contains 'index' %}
+          <h1 class="site-title">{{ shop.name }}</h1>
+        {% else %}
+          <div class="site-title"><a href="/">{{ shop.name }}</a></div>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="header-tools">
+
+      <a class="cart-count {% if cart.item_count < 100 %}contain-count{% endif %}" href="/cart">
+        <span class="bag-count">{{ cart.item_count }}</span>
+        <span class="bag-text">{{ 'layout.header.cart_item_count' | t: count: cart.item_count }}</span>
+      </a>
+
+      {% if settings.enable-currency-switcher %}
+        <div class="select-wrapper currency-switcher">
+          <div class="selected-currency"></div>
+          <select id="currencies" name="currencies">
+            {% capture codes %},USD,EUR,GBP,CAD,ARS,AUD,BBD,BDT,BSD,BHD,BRL,BOB,BND,BGN,MMK,KYD,CLP,CNY,COP,CRC,HRK,CZK,DKK,DOP,XCD,EGP,XPF,FJD,GHS,GTQ,GYD,GEL,HKD,HUF,ISK,INR,IDR,NIS,JMD,JPY,JOD,KZT,KES,KWD,LVL,LTL,MXN,MYR,MUR,MDL,MAD,MNT,MZN,ANG,NZD,NGN,NOK,OMR,PKR,PYG,PEN,PHP,PLN,QAR,RON,RUB,SAR,RSD,SCR,SGD,SYP,ZAR,KRW,LKR,SEK,CHF,TWD,THB,TZS,TTD,TRY,UAH,AED,UYU,VEB,VND,ZMK,{% endcapture %}
+            {% assign supported_codes = settings.currency-switcher-supported-currencies | split: ' ' %}
+            <option value="{{ shop.currency }}" selected="selected">{{ shop.currency }}</option>
+            {% for code in supported_codes %}
+              {% if code != shop.currency and codes contains code %}
+                <option value="{{ code }}">{{ code }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      {% endif %}
+
+    </div>
+
+    <div class="mobile-header-tools">
+      <span class="mobile-header-search-toggle">&#57346;</span>
+      <a class="mobile-cart-count {% if cart.item_count < 100 %}contain-count{% endif %}" href="/cart">&#57348; <span class="bag-count">{{ cart.item_count }}</span></a>
+      <span class="mobile-navigation-toggle"><span></span></span>
+    </div>
+
+    <nav class="navigation">
+      <ul class="navigation-first-tier">
+        {% for link in linklists.main-menu.links %}
+          {% if link.handle == 'mega-nav' %}
+            {% include 'mega-navigation' %}
+          {% else %}
+            {% include 'has-dropdown' %}
+            <li class="{% if has-dropdown %}has-dropdown{% endif %} regular-nav">
+              <a href="{{ link.url }}">{{ link.title }} {% if has-dropdown %}<span class="mobile-tier-toggle"></span>{% endif %}</a>
+              {% if has-dropdown %}
+                <ul class="navigation-second-tier">
+                  {% for link in linklists[link_handle].links %}
+                    {% include 'has-dropdown' %}
+                    <li class="{% if has-dropdown %}has-dropdown{% endif %}">
+                      <a href="{{ link.url }}">{{ link.title }} {% if has-dropdown %}<span class="mobile-tier-toggle"></span>{% endif %}</a>
+                      {% if has-dropdown %}
+                        <ul class="navigation-third-tier">
+                          {% for link in linklists[link_handle].links %}
+                            {% include 'has-dropdown' %}
+                            <li class="{% if has-dropdown %}has-dropdown{% endif %}">
+                              <a href="{{ link.url }}">{{ link.title }} {% if has-dropdown %}<span class="mobile-tier-toggle"></span>{% endif %}</a>
+                              {% if has-dropdown %}
+                                <ul class="navigation-fourth-tier">
+                                  {% for link in linklists[link_handle].links %}
+                                    <li>
+                                      <a href="{{ link.url }}">{{ link.title }}</a>
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                              {% endif %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
+          {% endif %}
+        {% endfor %}
+        {% if shop.customer_accounts_enabled %}
+          <li class="customer-links">
+            {% if customer %}
+              <a href="/account">{{ 'customers.account.title' | t }}</a>
+            {% else %}
+              {{ 'customers.account.title' | t | customer_login_link }}
+            {% endif %}
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+  </header>
+</div>

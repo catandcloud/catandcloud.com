@@ -1,0 +1,70 @@
+<div class="contact-form">
+  
+  {% form 'contact' %}
+
+    {% if form.errors %}
+	  {{ page.content }}
+      {{ form.errors | default_errors }}
+    {% endif %}
+
+    {% if form.posted_successfully? %}
+      <p>{{ 'general.wholesale_contact_page.success_message' | t }}</p>
+    {% else %}
+  
+	  {{ page.content }}
+  
+      <div class="input-wrapper">
+        <label>{{ 'general.name' | t }}</label>
+        <input type="text" name="contact[name]" value="{{ form.name }}">
+      </div>
+
+      <div class="input-wrapper">
+        <label>{{ 'general.email' | t }}</label>
+        <input type="text" name="contact[email]" value="{{ form.email }}" class="{% if form.errors contains 'email' %}error{% endif %}">
+      </div>
+     
+      <div class="input-wrapper">
+        <label>Address</label>
+        <input type="text" name="contact[address]" value="{{ form.address }}">
+      </div>
+        
+      <div class="input-wrapper">
+        <label>Phone</label>
+        <input type="text" name="contact[phone]" value="{{ form.phone }}">
+      </div>
+  
+      <label>Business Type:</label>
+       <select id="businessType" name="contact[business_type]">
+           <option>Cafe</option>
+           <option>Restaurant</option>
+           <option>Other</option>
+       </select>
+
+      <label>Business Staus:</label>
+       <select id="businessStatus" name="contact[business_status]">
+           <option>New</option>
+           <option>Existing</option>
+       </select>
+
+      <label>Estimated Weekly Pounds:</label>
+       <select id="weeklyPounds" name="contact[estimated_pounds]">
+           <option>1-25</option>
+           <option>26-50</option>
+           <option>51-100</option>
+           <option>100+</option>
+       </select>
+  
+      <div class="input-wrapper">
+        <label>Comments or Questions</label>
+        <textarea name="contact[comments]" rows="5">{{ form.comments_or_questions }}</textarea>
+      </div>
+
+  
+      <div class="input-wrapper">
+        <input type="submit" value="{{ 'general.wholesale_contact_page.submit' | t }}">
+      </div>
+
+    {% endif %}
+
+  {% endform %}
+</div>

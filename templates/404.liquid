@@ -1,0 +1,11 @@
+<div class="rte">
+  {% capture searchLink %}<a href="/search">{{ 'general.404.search_link_text' | t }}</a>{% endcapture %}
+  {% capture productsLink %}<a href="/collections/all">{{ 'general.404.products_link_text' | t }}</a>{% endcapture %}
+  
+  {% comment %}
+  <p>{{ 'general.404.message_html' | t: search_link_text: searchLink, products_link_text: productsLink }}</p>
+  {% endcomment %}
+  
+  <p>{{ 'general.404.goofy_message_html' | t: search_link_text: searchLink, products_link_text: productsLink }}</p>
+  <img alt="" src="//cdn.shopify.com/s/files/1/0851/9402/t/2/assets/baca_404.jpg">
+</div>
